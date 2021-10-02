@@ -4,31 +4,77 @@
 
 <div class="jumbotron">
     <p class="lead">Please enter a url below to fetch the images and word count.</p>
-    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
-    {
-        @Html.TextBox("url", null, new { style ="width: 400px; max-width: 60%;" })
-        @:<input type="submit" value="🔎︎" class="btn btn-primary btnSubmit" />
-    }
+    @Html.TextBox("url", null, new { style = "width: 400px; max-width: 60%; ", id = "url" })
+    <input type="submit" value="🔎︎" id="submit" class="btn btn-primary btnSubmit" />
 </div>
 
+<h3>Results</h3>
 <div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
+    <div class="col-xs-12" id="resultsMessage">
+        <em>results will be displayed here</em>
     </div>
 </div>
+<div class="row" id="results">
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        $("#submit").click(
+            function () {
+                console.log("submit clicked");
+                let url = $("#url").val();
+                $.ajax({
+                    url: "/api/LoadUrl?url=" + url,
+                    timeout: 2000,
+                    success: function (data) {
+                        if (data != null) {
+                            console.log("data found");
+                            //if some data was returned
+                            let wordCount = data.CountOfWords;
+                            let wordList = data.WordList;
+                            let imgList = data.ImgList;
+                            let count = 0;
+                            $("#resultsMessage").html(
+                                "<h4>Total words: " + wordCount + "</h4>"
+                            );
+
+                            $("#results").append("<div style='width:100%;' class='col-xs-12'><h4>Top 10 words</h4></div>" +
+                                "<div style='width:500;' class='col-xs-12' id='top10'></div>");
+                            $("#top10").append("<div class='col-xs-6'><b>Words</b></div>" +
+                                "<div class='col-xs-6'><b>Number of Occurences</b></div>");
+                            for (let word in wordList) {
+                                console.log("word:" + word);
+                                if (wordList.hasOwnProperty(word)) {
+                                    let thisWord = wordList[word].Key;
+                                    let noOcc = wordList[word].Value;
+                                    console.log(word, noOcc);
+                                    $("#top10").append(
+                                        "<div class='col-xs-6'>" + thisWord + "</div>" +
+                                        "<div class='col-xs-6'>" + noOcc + "</div>"
+                                    );
+                                    count++;
+                                }
+                                if (count == 10) { break; }
+                            }
+
+                            //build image carousel
+                            $("#results").append("<div style='width:100%;' class='col-xs-12'><h4>Images</h4></div>");
+
+                        }
+                        else {
+                            //if no data was returned
+                            $("#resultsMessage").html("<span style='color: #B33;'><em>no results found</em></span>");
+                            console.log("no data");
+
+                        }
+                    },
+                    error: function () {
+                        $("#resultsMessage").html("<span style='color: #B33;'><em>url could not be found, please ensure you have entered a valid url</em></span>");
+                    }
+                });
+            }
+        )
+
+    });
+</script>

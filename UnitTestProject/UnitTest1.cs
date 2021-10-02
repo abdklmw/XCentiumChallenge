@@ -1,5 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using XCentiumChallenge.Controllers.api;
+using XCentiumChallenge.Controllers;
 using XCentiumChallenge.Models;
 using XCentiumChallenge.Helpers;
 using System;

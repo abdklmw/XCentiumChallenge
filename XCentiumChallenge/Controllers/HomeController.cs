@@ -14,6 +14,14 @@ namespace XCentiumChallenge.Controllers
             return View();
         }
 
+        [HttpPost]
+        public ActionResult DisplayResults(string url)
+        {
+            //fetch api results
 
+
+
+            return View();
+        }
     }
 }

@@ -71,7 +71,14 @@ namespace XCentiumChallenge.Helpers
             }
 
             //let's order the list by number of occurrences
-            retCollection.WordList = new SortedDictionary<string, int>(resultList);
+            var orderedWordList =
+                resultList.OrderByDescending(w => w.Value).ToList();
+            retCollection.WordList = new List<KeyValuePair<string, int>>(orderedWordList);
+            //for(int i=0; i <= orderedWordList.Count(); i++)
+            //{
+            //    retCollection.WordList.Add(new KeyValuePair<string, int>(orderedWordList[i].Key, orderedWordList[i].Value));
+            //}
+
 
             return retCollection;
         }
