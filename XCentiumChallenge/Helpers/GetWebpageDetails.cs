@@ -37,6 +37,38 @@ namespace XCentiumChallenge.Helpers
                 .Where(src => !String.IsNullOrEmpty(src)) //let's not keep the empty or null values
                 .ToList();
 
+            //the sources are probably relative (yay!) so we need to fix them, if they are
+            //get the starting url
+
+            for (var i = 0; i < retCollection.ImageSrcList.Count; i++)
+            {
+                var currentPath = url.Substring(0, url.LastIndexOf("/")+1);
+                var image = retCollection.ImageSrcList[i];
+                if (!image.StartsWith("http"))//if it's not an absolute path...
+                {
+                    if (image.StartsWith("/"))//the really painful ones that start with ../../ etc, we'll deal with later
+                    {
+                        currentPath = url.Substring(0, url.IndexOf("/", url.IndexOf("//") + 2)); //we'll need the root url
+                        retCollection.ImageSrcList[i] = currentPath + image;
+                    }
+                    else if (image.StartsWith(".."))//buckle up kids..
+                    {
+                        do
+                        {
+                            currentPath = currentPath.Substring(0, currentPath.Length - 1);//peel off that last fslash
+                            currentPath = currentPath.Substring(0, currentPath.LastIndexOf("/")+1); //get the next directory down (keep the fslash)
+                            image = image.Substring(3, image.Length-3);
+                        }
+                        while (image.StartsWith("..")); //until we get rid of all the ../ keep going
+                        retCollection.ImageSrcList[i] = currentPath + image;
+                    }
+                    else //starts with something like "images/" or something
+                    {
+                        retCollection.ImageSrcList[i] = currentPath + image;
+                    }
+                }
+            }
+
             //get content from page
             var content = doc.DocumentNode.InnerText;
 
@@ -74,11 +106,6 @@ namespace XCentiumChallenge.Helpers
             var orderedWordList =
                 resultList.OrderByDescending(w => w.Value).ToList();
             retCollection.WordList = new List<KeyValuePair<string, int>>(orderedWordList);
-            //for(int i=0; i <= orderedWordList.Count(); i++)
-            //{
-            //    retCollection.WordList.Add(new KeyValuePair<string, int>(orderedWordList[i].Key, orderedWordList[i].Value));
-            //}
-
 
             return retCollection;
         }

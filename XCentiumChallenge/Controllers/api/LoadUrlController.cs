@@ -13,10 +13,12 @@ namespace XCentiumChallenge.Controllers.api
         public IHttpActionResult Index(string url)
         {
             var results = Helpers.GetWebpageDetails.fetch(url);
+
             if (results == null)
             {
                 return NotFound();
             }
+
             return Ok(Helpers.GetWebpageDetails.fetch(url));
 
         }

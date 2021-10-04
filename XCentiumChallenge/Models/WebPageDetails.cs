@@ -1,6 +1,8 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace XCentiumChallenge.Models
@@ -10,5 +12,9 @@ namespace XCentiumChallenge.Models
         public List<string> ImageSrcList { get; set; }
         public List<KeyValuePair<string,int>> WordList { get; set; }
         public int CountOfWords { get; set; }
+
+
     }
+
+
 }

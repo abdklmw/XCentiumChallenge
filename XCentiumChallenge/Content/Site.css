@@ -22,3 +22,11 @@ select,
 textarea {
     max-width: 280px;
 }
+
+
+/*carousel css*/
+.full-screen {
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
