@@ -40,10 +40,8 @@
 
 <script>
     $(document).ready(function () {
-        console.log("ready");
         $("#submit").click(
             function () {
-                console.log("submit clicked");
                 //clear results in case this isn't the first search
                 $("#results").html(null);
                 $("#resultsMessage").html(null);
@@ -62,7 +60,6 @@
                                 "        </div >";
                             let carouselIndicatorTemplate = "<li data-target=\"#carouselIndicators\" data-slide-to=\"\"></li>";
 
-                            console.log("data found");
                             //if some data was returned
                             let wordCount = data.CountOfWords;
                             let wordList = data.WordList;
@@ -79,11 +76,9 @@
                             $("#top10").append("<div class='row'><div class='col'><b>Words</b></div>" +
                                 "<div class='col'><b>Number of Occurences</b></div></div>");
                             for (let word in wordList) {
-                                console.log("word:" + word);
                                 if (wordList.hasOwnProperty(word)) {
                                     let thisWord = wordList[word].Key;
                                     let noOcc = wordList[word].Value;
-                                    console.log(word, noOcc);
                                     $("#top10").append(
                                         "<div class='row'><div class='col'>" + thisWord + "</div>" +
                                         "<div class='col'>" + noOcc + "</div></div>"
@@ -150,7 +145,6 @@
                         else {
                             //if no data was returned
                             $("#resultsMessage").html("<span style='color: #B33;'><em>no results found</em></span>");
-                            console.log("no data");
 
                         }
                     },
